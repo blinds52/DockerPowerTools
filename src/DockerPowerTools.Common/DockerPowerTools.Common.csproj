@@ -67,7 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncExecutor.cs" />
+    <Compile Include="ConnectionType.cs" />
+    <Compile Include="ConnectionTypeProbe.cs" />
     <Compile Include="DockerConstants.cs" />
+    <Compile Include="HttpClientOwner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

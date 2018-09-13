@@ -58,16 +58,23 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
             foreach (var repository in repositories.Repositories)
             {
-                var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters());
+                try
+                {
+                    var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters());
 
-                var tagViewModels = (tags.Tags ?? new string[0])
-                    .Select(t => new TagViewModel(repository, t))
-                    .OrderBy(t => t.Tag)
-                    .ToArray();
+                    var tagViewModels = (tags.Tags ?? new string[0])
+                        .Select(t => new TagViewModel("testing",repository, t))
+                        .OrderBy(t => t.Tag)
+                        .ToArray();
 
-                var repositoryViewModel = new RepositoryViewModel(repository, tagViewModels);
+                    var repositoryViewModel = new RepositoryViewModel(repository, tagViewModels);
 
-                repositoryViewModels.Add(repositoryViewModel);
+                    repositoryViewModels.Add(repositoryViewModel);
+                }
+                catch (Exception)
+                {
+                    repositoryViewModels.Add(new RepositoryViewModel(repository, new TagViewModel[0]));
+                }
             }
 
             //Do this on the UI thread

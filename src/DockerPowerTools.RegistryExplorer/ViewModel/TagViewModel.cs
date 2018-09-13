@@ -6,10 +6,11 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
     {
         private bool _isSelected;
 
-        public TagViewModel(string repository, string tag)
+        public TagViewModel(string repository, string tag, string registry)
         {
             Repository = repository;
             Tag = tag;
+            Registry = registry;
         }
 
         public bool IsSelected
@@ -21,6 +22,8 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        public string Registry { get; }
 
         public string Repository { get; }
 

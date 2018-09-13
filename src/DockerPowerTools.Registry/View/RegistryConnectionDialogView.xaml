@@ -4,9 +4,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DockerPowerTools.Registry.View"
+        xmlns:viewModel="clr-namespace:DockerPowerTools.Registry.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:Cas.Common.WPF.Behaviors;assembly=Cas.Common.WPF"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
+        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
         mc:Ignorable="d"
-        Title="Connect to Docker Registry" Height="450" Width="800">
+        d:DataContext="{d:DesignInstance viewModel:RegistryConnectionDialogViewModel}"
+        Title="Connect to Docker Registry" SizeToContent="Height" Width="400">
+    <i:Interaction.Behaviors>
+        <behaviors:CloseableBehavior/>
+    </i:Interaction.Behaviors>
+
+    <Window.Resources>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.Resources>
+                <Style x:Key="BaseStyle" TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="TextBox"   BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="CheckBox"  BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="controls:BindablePasswordBox" BasedOn="{StaticResource BaseStyle}"/>
+
+                <Style TargetType="TextBox" x:Key="ListTextBoxStyle" BasedOn="{StaticResource BaseStyle}">
+                    <Setter Property="AcceptsReturn" Value="True"/>
+                    <Setter Property="AcceptsTab" Value="True"/>
+                    <Setter Property="TextWrapping" Value="NoWrap"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                </Style>
+            </Grid.Resources>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0">Endpoint</TextBlock>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Endpoint, UpdateSourceTrigger=PropertyChanged}" x:Name="EndpointTextBox" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0">Anonymous?</TextBlock>
+            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding Path=IsAnonymous}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0">Username</TextBlock>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsAnonymous, Converter={StaticResource InvertBooleanConverter}}"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0">Password</TextBlock>
+            <controls:BindablePasswordBox Grid.Row="3" Grid.Column="1" Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsAnonymous, Converter={StaticResource InvertBooleanConverter}}"/>
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <xctk:BusyIndicator Grid.Column="1" VerticalAlignment="Center" Margin="2" Visibility="{Binding Path=Executor.IsBusy, Converter={StaticResource HiddenWhenFalseConverter}}"/>
+            <Button Grid.Column="2" MinWidth="100" Margin="4" IsDefault="True" Command="{Binding Path=ConnectCommand}">_OK</Button>
+            <Button Grid.Column="3" MinWidth="100" Margin="4" IsCancel="True">_Cancel</Button>
+        </Grid>
     </Grid>
 </Window>

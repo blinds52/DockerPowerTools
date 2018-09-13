@@ -4,14 +4,14 @@ namespace DockerPowerTools.Registry
 {
     public class RegistryConnection
     {
-        public RegistryConnection(IRegistryClient client, string endpoint)
+        public RegistryConnection(IRegistryClient client, string registry)
         {
             Client = client;
-            Endpoint = endpoint;
+            Registry = registry;
         }
 
         public IRegistryClient Client { get; }
 
-        public string Endpoint { get; }
+        public string Registry { get; }
     }
 }

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Docker.Registry.DotNet;
 using Docker.Registry.DotNet.Authentication;
+using DockerPowerTools.Registry.View;
+using DockerPowerTools.Registry.ViewModel;
 
 namespace DockerPowerTools.Registry
 {
@@ -9,16 +11,20 @@ namespace DockerPowerTools.Registry
     {
         public Task<RegistryConnection> GetRegistryConnectionAsync()
         {
-            const string endpoint = "https://stagingregistry.captiveaire.com:5000";
+            RegistryConnection connection = null;
 
-            var configuration =
-                new RegistryClientConfiguration(new Uri(endpoint));
+            var viewModel = new RegistryConnectionDialogViewModel();
 
-            var client =
-                configuration.CreateClient(new PasswordOAuthAuthenticationProvider("<username>", "<password>"));
+            var view = new RegistryConnectionDialogView
+            {
+                DataContext = viewModel
+            };
 
-            var connection  = new RegistryConnection(client, endpoint);
-
+            if (view.ShowDialog() == true)
+            {
+                connection = viewModel.Connection;
+            }
+            
             return Task.FromResult(connection);
         }
     }
