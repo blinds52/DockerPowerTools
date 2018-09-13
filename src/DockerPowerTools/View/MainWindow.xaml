@@ -4,10 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DockerPowerTools"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:viewModel="clr-namespace:DockerPowerTools.ViewModel"
+        xmlns:viewModel1="clr-namespace:DockerPowerTools.DockerExplorer.ViewModel;assembly=DockerPowerTools.DockerExplorer"
+        xmlns:view="clr-namespace:DockerPowerTools.DockerExplorer.View;assembly=DockerPowerTools.DockerExplorer"
+        xmlns:viewModel2="clr-namespace:DockerPowerTools.RegistryExplorer.ViewModel;assembly=DockerPowerTools.RegistryExplorer"
+        xmlns:view1="clr-namespace:DockerPowerTools.RegistryExplorer.View;assembly=DockerPowerTools.RegistryExplorer"
         mc:Ignorable="d"
-        Title="Docker Power Tools" Height="450" Width="800">
+        d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
+        Title="Docker Power Tools" Height="450" Width="800" Icon="/DockerPowerTools;component/Images/moby.png">
+    <Window.Resources>
+       
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -19,24 +31,44 @@
             </MenuItem>
         </Menu>
 
-        <StatusBar Grid.Row="2">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="100" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem>
-                <TextBlock Text="Ready" />
-            </StatusBarItem>
-            <Separator Grid.Column="1" />
-        </StatusBar>
+        <ToolBar Grid.Row="1">
+            <Button Command="{Binding Path=OpenDockerExplorerCommand}">Docker</Button>
+            <Button Command="{Binding Path=OpenRegistryExplorerCommand}">Registry</Button>
+        </ToolBar>
+
+        <xcad:DockingManager Grid.Row="2" DocumentsSource="{Binding Path=Tools}">
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Content.Title}"/>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+
+            <xcad:DockingManager.Resources>
+                <DataTemplate DataType="{x:Type viewModel1:DockerExplorerViewModel}">
+                    <view:DockerExplorerView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewModel2:RegistryExplorerViewModel}">
+                    <view1:RegistryExplorerView/>
+                </DataTemplate>
+            </xcad:DockingManager.Resources>
+
+            <xcad:LayoutRoot>
+
+                <xcad:LayoutPanel Orientation="Horizontal" >
+
+                    <xcad:LayoutPanel Orientation="Vertical" DockWidth="*">
+
+                        <xcad:LayoutDocumentPaneGroup  >
+                            <xcad:LayoutDocumentPane x:Name="DocumentPane" >
+                            </xcad:LayoutDocumentPane>
+                        </xcad:LayoutDocumentPaneGroup >
+
+                    </xcad:LayoutPanel>
+                </xcad:LayoutPanel>
+
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+        
+
     </Grid>
 </Window>

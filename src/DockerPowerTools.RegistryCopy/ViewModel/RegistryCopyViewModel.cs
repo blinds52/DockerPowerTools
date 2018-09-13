@@ -1,4 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using Docker.DotNet;
 using DockerPowerTools.Common;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -13,19 +18,45 @@ namespace DockerPowerTools.RegistryCopy.ViewModel
         {
             DockerEndpoint = DockerConstants.DefaultWindowsDockerEndpoint;
 
-            TestConnectionCommand = new RelayCommand(TestConnection, CanTestConnection);
+            TestConnectionCommand = new RelayCommand(() => TestConnectionAsync().IgnoreAsync(), CanTestConnection);
         }
 
         public ICommand TestConnectionCommand { get; }
 
-        private void TestConnection()
-        {
+        public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
 
+        private async Task TestConnectionAsync()
+        {
+            try
+            {
+                await AsyncExecutor.ExecuteAsync(CreateDockerClientAsync);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Connection Failed");
+            }   
         }
 
         private bool CanTestConnection()
         {
-            return !string.IsNullOrWhiteSpace(DockerEndpoint);
+            if (!AsyncExecutor.CanExecute)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(DockerEndpoint))
+                return false;
+
+            return true;
+        }
+
+        public async Task<IDockerClient> CreateDockerClientAsync(CancellationToken cancellationToken)
+        {
+            var dockerClientConfiguration = new DockerClientConfiguration(new Uri(DockerEndpoint));
+
+            var dockerClient = dockerClientConfiguration.CreateClient();
+
+            await dockerClient.System.PingAsync(cancellationToken);
+
+            return dockerClient;
         }
 
         public string DockerEndpoint

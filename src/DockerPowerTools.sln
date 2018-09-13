@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools", "DockerP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.RegistryCopy", "DockerPowerTools.RegistryCopy\DockerPowerTools.RegistryCopy.csproj", "{13539B77-A62D-4362-B38D-08E3BADE89B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.Common", "DockerPowerTools.Common\DockerPowerTools.Common.csproj", "{3A7B4C4A-677F-4A10-97C4-75C30710BA5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.DockerExplorer", "DockerPowerTools.DockerExplorer\DockerPowerTools.DockerExplorer.csproj", "{F909AA45-C150-40AA-9EEF-D3B6A1C345C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.RegistryExplorer", "DockerPowerTools.RegistryExplorer\DockerPowerTools.RegistryExplorer.csproj", "{35B7B3F3-53CA-4379-975C-595BD5709895}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,18 @@ Global
 		{13539B77-A62D-4362-B38D-08E3BADE89B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13539B77-A62D-4362-B38D-08E3BADE89B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13539B77-A62D-4362-B38D-08E3BADE89B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A7B4C4A-677F-4A10-97C4-75C30710BA5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7B4C4A-677F-4A10-97C4-75C30710BA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A7B4C4A-677F-4A10-97C4-75C30710BA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A7B4C4A-677F-4A10-97C4-75C30710BA5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F909AA45-C150-40AA-9EEF-D3B6A1C345C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F909AA45-C150-40AA-9EEF-D3B6A1C345C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F909AA45-C150-40AA-9EEF-D3B6A1C345C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F909AA45-C150-40AA-9EEF-D3B6A1C345C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B7B3F3-53CA-4379-975C-595BD5709895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B7B3F3-53CA-4379-975C-595BD5709895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B7B3F3-53CA-4379-975C-595BD5709895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B7B3F3-53CA-4379-975C-595BD5709895}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
