@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.DockerExpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.RegistryExplorer", "DockerPowerTools.RegistryExplorer\DockerPowerTools.RegistryExplorer.csproj", "{35B7B3F3-53CA-4379-975C-595BD5709895}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerPowerTools.Registry", "DockerPowerTools.Registry\DockerPowerTools.Registry.csproj", "{9608A6EE-6D75-4D32-A236-0271D9BEEA25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{35B7B3F3-53CA-4379-975C-595BD5709895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35B7B3F3-53CA-4379-975C-595BD5709895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35B7B3F3-53CA-4379-975C-595BD5709895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9608A6EE-6D75-4D32-A236-0271D9BEEA25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9608A6EE-6D75-4D32-A236-0271D9BEEA25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9608A6EE-6D75-4D32-A236-0271D9BEEA25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9608A6EE-6D75-4D32-A236-0271D9BEEA25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

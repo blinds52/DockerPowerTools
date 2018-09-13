@@ -4,9 +4,54 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DockerPowerTools.RegistryExplorer.View"
+             xmlns:viewModel="clr-namespace:DockerPowerTools.RegistryExplorer.ViewModel"
+             xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModel:RegistryExplorerViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type viewModel:RepositoryViewModel}" ItemsSource="{Binding Path=Tags}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/DockerPowerTools.RegistryExplorer;component/Images/folder_Closed_16xLG.png" ></Image>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Name}"></TextBlock>
+            </Grid>
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:TagViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/DockerPowerTools.RegistryExplorer;component/Images/Tag_16x.png"></Image>
+                <CheckBox Grid.Column="1" IsChecked="{Binding Path=IsSelected}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Path=Tag}"></TextBlock>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
-        <TextBlock Text="Registry Explorer" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ToolBar>
+            <Button Command="{Binding Path=DeleteCommand}" ToolTip="Delete selected tags">
+                <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Delete.gif"   />
+            </Button>
+        </ToolBar>
+
+        <TreeView Grid.Row="1" ItemsSource="{Binding Path=Repositories}">
+
+        </TreeView>
     </Grid>
 </UserControl>

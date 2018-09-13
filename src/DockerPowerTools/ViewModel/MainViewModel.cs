@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DockerPowerTools.Common;
+using DockerPowerTools.Common.ViewModel;
 using DockerPowerTools.DockerExplorer.ViewModel;
+using DockerPowerTools.Registry;
 using DockerPowerTools.RegistryExplorer.ViewModel;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -12,6 +14,8 @@ namespace DockerPowerTools.ViewModel
 {
     public class MainViewModel
     {
+        private readonly RegistryConnectionService _registryConnectionService = new RegistryConnectionService();
+
         public MainViewModel()
         {
             OpenDockerExplorerCommand = new RelayCommand(() => OpenDockerExplorerAsync().IgnoreAsync(), CanOpenDockerExplorer);
@@ -42,20 +46,25 @@ namespace DockerPowerTools.ViewModel
             return true;
         }
 
-        private Task OpenRegistryExplorerAsync()
+        private async Task OpenRegistryExplorerAsync()
         {
             try
             {
-                var registryExplorer = new RegistryExplorerViewModel();
+                var connection = await _registryConnectionService.GetRegistryConnectionAsync();
 
-                Tools.Add(registryExplorer);
+                if (connection != null)
+                {
+                    var registryExplorer = new RegistryExplorerViewModel(connection);
+
+                    await registryExplorer.LoadAsync();
+
+                    Tools.Add(registryExplorer);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            return Task.CompletedTask;
         }
 
         private bool CanOpenRegistryExplorer()

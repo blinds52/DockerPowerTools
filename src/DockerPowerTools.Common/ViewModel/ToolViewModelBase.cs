@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace DockerPowerTools.ViewModel
+namespace DockerPowerTools.Common.ViewModel
 {
     public abstract class ToolViewModelBase : ViewModelBase
     {

@@ -1,4 +1,4 @@
-﻿using DockerPowerTools.ViewModel;
+﻿using DockerPowerTools.Common.ViewModel;
 
 namespace DockerPowerTools.DockerExplorer.ViewModel
 {

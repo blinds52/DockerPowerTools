@@ -133,6 +133,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\PathFactory.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -183,12 +184,12 @@
       <Project>{35b7b3f3-53ca-4379-975c-595bd5709895}</Project>
       <Name>DockerPowerTools.RegistryExplorer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DockerPowerTools.Registry\DockerPowerTools.Registry.csproj">
+      <Project>{9608a6ee-6d75-4d32-a236-0271d9beea25}</Project>
+      <Name>DockerPowerTools.Registry</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="RegistryExplorer\ViewModel\" />
-    <Folder Include="RegistryExplorer\View\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\moby.png" />
   </ItemGroup>
