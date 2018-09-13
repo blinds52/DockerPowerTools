@@ -17,7 +17,7 @@ namespace DockerPowerTools.Registry.ViewModel
 
         private bool _isAnonymous = true;
 
-        private string _endpoint = DefaultEndpoint;
+        private string _registry = DefaultEndpoint;
         private string _username;
         private string _password;
 
@@ -32,7 +32,7 @@ namespace DockerPowerTools.Registry.ViewModel
         {
             try
             {
-                string partialUrl = $"{Endpoint}/v2";
+                string partialUrl = $"{Registry}/v2";
 
                 var connectionType = await ConnectionTypeProbe.ProbeAsync(partialUrl);
 
@@ -41,15 +41,15 @@ namespace DockerPowerTools.Registry.ViewModel
                 switch (connectionType)
                 {
                     case ConnectionType.Https:
-                        uri = $"https://{Endpoint}";
+                        uri = $"https://{Registry}";
                         break;
 
                     case ConnectionType.Http:
-                        uri = $"http://{Endpoint}";
+                        uri = $"http://{Registry}";
                         break;
 
                     case ConnectionType.None:
-                        throw new Exception($"No connection could be established with '{Endpoint}'");
+                        throw new Exception($"No connection could be established with '{Registry}'");
 
                     default:
                         throw new Exception($"Unexpected value '{connectionType}'");
@@ -72,7 +72,7 @@ namespace DockerPowerTools.Registry.ViewModel
 
                 await client.System.PingAsync();
 
-                var connection = new RegistryConnection(client, Endpoint);
+                var connection = new RegistryConnection(client, Registry);
 
                 Connection = connection;
 
@@ -86,7 +86,7 @@ namespace DockerPowerTools.Registry.ViewModel
 
         private bool CanConnect()
         {
-            if (string.IsNullOrWhiteSpace(Endpoint))
+            if (string.IsNullOrWhiteSpace(Registry))
                 return false;
 
             if (!IsAnonymous)
@@ -113,12 +113,12 @@ namespace DockerPowerTools.Registry.ViewModel
             }
         }
 
-        public string Endpoint
+        public string Registry
         {
-            get => _endpoint;
+            get => _registry;
             set
             {
-                _endpoint = value;
+                _registry = value;
                 RaisePropertyChanged();
             }
         }

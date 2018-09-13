@@ -24,7 +24,7 @@
         </HierarchicalDataTemplate>
 
         <DataTemplate DataType="{x:Type viewModel:TagViewModel}">
-            <Grid>
+            <Grid ToolTip="{Binding Path=FullyQualified}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>

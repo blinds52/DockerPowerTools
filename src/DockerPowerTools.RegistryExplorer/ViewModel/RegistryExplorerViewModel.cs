@@ -63,7 +63,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
                     var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters());
 
                     var tagViewModels = (tags.Tags ?? new string[0])
-                        .Select(t => new TagViewModel("testing",repository, t))
+                        .Select(t => new TagViewModel(_connection.Registry, repository, t))
                         .OrderBy(t => t.Tag)
                         .ToArray();
 
