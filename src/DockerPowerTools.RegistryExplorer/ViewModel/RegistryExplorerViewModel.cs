@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,31 +22,135 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         private ObservableCollection<RepositoryViewModel> _repositories = new ObservableCollection<RepositoryViewModel>();
         public override string Title => "Registry Explorer";
 
+        private bool _canLoadCatalog;
+        private string _repository;
+
         public RegistryExplorerViewModel(RegistryConnection connection)
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
 
-            DeleteCommand = new RelayCommand(() => DeleteAsync().IgnoreAsync(), CanDelete);
+            DeleteCommand = new RelayCommand(Delete, CanDelete);
+            RefreshCommand = new RelayCommand(Refresh, CanRefresh);
+            LoadRepositoryCommand = new RelayCommand(LoadRepository, CanLoadRepository);
         }
 
         public ICommand DeleteCommand { get; }
+        public ICommand RefreshCommand { get; }
         public ICommand CopyCommand { get; }
         public ICommand PullCommand { get; }
+        public ICommand LoadRepositoryCommand { get; }
 
         public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
 
-        private Task DeleteAsync()
+        private void LoadRepository()
         {
-            var selectedCount = Repositories.Sum(r => r.Tags.Length);
+            AsyncExecutor.ExecuteAsync(LoadRepositoryAsync).IgnoreAsync();
+        }
 
-            var result = MessageBox.Show($"Delete {selectedCount} tag(s)?", "Delete", MessageBoxButton.YesNo);
+        private void Refresh()
+        {
+            AsyncExecutor.ExecuteAsync(RefreshInnerAsync).IgnoreAsync();
+        }
+
+        private bool CanRefresh()
+        {
+            if (!AsyncExecutor.CanExecute)
+                return false;
+
+            return true;
+        }
+
+        private async Task RefreshInnerAsync(CancellationToken cancellationToken)
+        {
+            if (_canLoadCatalog)
+            {
+                await LoadInnerAsync(cancellationToken);
+            }
+            else
+            {
+                foreach (var repository in Repositories)
+                {
+                    await repository.LoadAsync(cancellationToken);
+                }
+            }
+        }
+
+        private bool CanLoadRepository()
+        {
+            if (!AsyncExecutor.CanExecute)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(Repository))
+                return false;
+
+            return true;
+        }
+
+        private async Task LoadRepositoryAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var repositoryViewModel = new RepositoryViewModel(_connection, Repository);
+
+                await repositoryViewModel.LoadAsync(cancellationToken);
+
+                DispatcherHelper.CheckBeginInvokeOnUI(() => Repositories.Add(repositoryViewModel));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Load repository");
+            }
+        }
+
+        private void Delete()
+        {
+            var selectedTags = Repositories
+                .SelectMany(r => r.Tags.Where(t => t.IsSelected))
+                .ToArray();
+
+            var result = MessageBox.Show($"Delete {selectedTags.Length} tag(s)?", "Delete", MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Not Implemented");
+                AsyncExecutor.ExecuteAsync(DeleteInnerAsync).IgnoreAsync();
             }
-            
-            return Task.CompletedTask;
+        }
+
+        private async Task DeleteInnerAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                foreach (var repository in Repositories)
+                {
+                    var tagsToDelete = repository.Tags
+                        .Where(t => t.IsSelected)
+                        .ToArray();
+
+                    if (tagsToDelete.Length > 0)
+                    {
+                        foreach (var tag in tagsToDelete)
+                        {
+                            //Get the manifest
+                            var manifest = await _connection.Client.Manifest.GetManifestAsync(tag.Repository, tag.Tag, cancellationToken);
+
+                            string digest = manifest.DockerContentDigest;
+
+                            if (!string.IsNullOrWhiteSpace(digest))
+                            {
+                                //Delete it!
+                                await _connection.Client.Manifest.DeleteManifestAsync(tag.Repository, digest, cancellationToken);
+                            }
+                        }
+
+                        //Refresh the tag
+                        await repository.LoadAsync(cancellationToken);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Delete");
+            }
         }
 
         private bool CanDelete()
@@ -53,42 +158,58 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             return Repositories.Any(r => r.Tags.Any(t => t.IsSelected));
         }
 
-        public async Task LoadAsync()
+        public Task LoadAsync()
         {
-            await AsyncExecutor.ExecuteAsync(LoadInnerAsync);
+            AsyncExecutor.ExecuteAsync(LoadInnerAsync).IgnoreAsync();
+
+            return Task.CompletedTask;
         }
 
         private async Task LoadInnerAsync(CancellationToken cancellationToken)
         {
-            var repositories = await _connection.Client.Catalog.GetCatalogAsync(new CatalogParameters(), cancellationToken);
-
-            var repositoryViewModels = new List<RepositoryViewModel>(repositories.Repositories.Length);
-
-            foreach (var repository in repositories.Repositories)
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var repositories = await _connection.Client.Catalog.GetCatalogAsync(new CatalogParameters(), cancellationToken);
 
-                try
+                _canLoadCatalog = true;
+
+                var repositoryViewModels = new List<RepositoryViewModel>(repositories.Repositories.Length);
+
+                foreach (var repository in repositories.Repositories)
                 {
-                    var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters(), cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                    var tagViewModels = (tags.Tags ?? new string[0])
-                        .Select(t => new TagViewModel(_connection.Registry, repository, t))
-                        .OrderBy(t => t.Tag)
-                        .ToArray();
+                    try
+                    {
+                        var repositoryViewModel = new RepositoryViewModel(_connection, repository);
 
-                    var repositoryViewModel = new RepositoryViewModel(repository, tagViewModels);
+                        repositoryViewModels.Add(repositoryViewModel);
 
-                    repositoryViewModels.Add(repositoryViewModel);
+                        await repositoryViewModel.LoadAsync(cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.Message);
+                    }
                 }
-                catch (Exception)
-                {
-                    repositoryViewModels.Add(new RepositoryViewModel(repository, new TagViewModel[0]));
-                }
+
+                //Do this on the UI thread
+                DispatcherHelper.CheckBeginInvokeOnUI(() => Repositories = new ObservableCollection<RepositoryViewModel>(repositoryViewModels));
             }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Unable to load catalog.");
+            }
+        }
 
-            //Do this on the UI thread
-            DispatcherHelper.CheckBeginInvokeOnUI(() => Repositories = new ObservableCollection<RepositoryViewModel>(repositoryViewModels));
+        public string Repository
+        {
+            get => _repository;
+            set
+            {
+                _repository = value; 
+                RaisePropertyChanged();
+            }
         }
 
         public ObservableCollection<RepositoryViewModel> Repositories

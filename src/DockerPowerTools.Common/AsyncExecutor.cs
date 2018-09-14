@@ -49,6 +49,8 @@ namespace DockerPowerTools.Common
             if (!CanExecute)
                 return null;
 
+            IsBusy = true;
+
             try
             {
                 _cts = new CancellationTokenSource();
@@ -67,6 +69,8 @@ namespace DockerPowerTools.Common
             finally
             {
                 _cts = null;
+
+                IsBusy = false;
 
                 CommandManager.InvalidateRequerySuggested();
             }           

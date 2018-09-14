@@ -16,7 +16,8 @@ namespace DockerPowerTools.Registry.Model
                 {
                     new RegistryConnectionModel()
                     {
-                        Registry = "registry.hub.docker.com"
+                        Registry = "registry.hub.docker.com",
+                        IsAnonymous = true
                     }
                 }
             };

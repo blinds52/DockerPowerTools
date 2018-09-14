@@ -125,7 +125,7 @@ namespace DockerPowerTools.Registry.ViewModel
             }
             else
             {
-                //SelectedRegistry.Registry = Registry;
+                SelectedRegistry.IsAnonymous = IsAnonymous;
                 SelectedRegistry.Username = Username;
 
                 if (RememberPassword)

@@ -53,6 +53,12 @@
                 <Button Command="{Binding Path=DeleteCommand}" ToolTip="Delete selected tags">
                     <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Delete.gif"   />
                 </Button>
+                <Separator/>
+                <TextBox Width="200" Margin="1" Text="{Binding Path=Repository, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <Button Command="{Binding Path=LoadRepositoryCommand}">
+                    Load Repository
+                </Button>
+                <Separator/>
             </ToolBar>
 
             <TreeView Grid.Row="1" ItemsSource="{Binding Path=Repositories}">
@@ -60,6 +66,7 @@
             </TreeView>
         </Grid>
 
-        <controls1:BusyIndicatorPanel Visibility="{Binding Path=AsyncExecutor.IsBusy, Converter={StaticResource CollapsedWhenFalseConverter}}" />
+        <controls1:BusyIndicatorPanel  Visibility="{Binding Path=AsyncExecutor.IsBusy, Converter={StaticResource CollapsedWhenFalseConverter}}"  />
+
     </Grid>
 </UserControl>

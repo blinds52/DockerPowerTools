@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:DockerPowerTools.Common.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid IsHitTestVisible="True" Background="White" Opacity="0.3">
+    <Grid IsHitTestVisible="True" Background="LightGray" Opacity="0.3">
           <local:BusyIndicator HorizontalAlignment="Center" VerticalAlignment="Center"/>  
     </Grid>
 </UserControl>
