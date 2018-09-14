@@ -14,5 +14,10 @@ namespace DockerPowerTools
 
             this.DataContext = new MainViewModel();
         }
+
+        private void ExitMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

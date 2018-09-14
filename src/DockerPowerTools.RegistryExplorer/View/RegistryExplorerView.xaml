@@ -50,6 +50,9 @@
             </Grid.RowDefinitions>
 
             <ToolBar>
+                <Button Command="{Binding Path=RefreshCommand}" ToolTip="Refresh">
+                    <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Refresh_16x.png" ></controls:AutoGreyableImage>
+                </Button>
                 <Button Command="{Binding Path=DeleteCommand}" ToolTip="Delete selected tags">
                     <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Delete.gif"   />
                 </Button>

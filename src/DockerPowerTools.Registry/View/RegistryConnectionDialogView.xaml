@@ -12,6 +12,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         d:DataContext="{d:DesignInstance viewModel:RegistryConnectionDialogViewModel}"
         Title="Connect to Docker Registry" SizeToContent="Height" Width="400" Icon="/DockerPowerTools.Registry;component/Images/SQLMobileConnection_16x.png">
     <i:Interaction.Behaviors>

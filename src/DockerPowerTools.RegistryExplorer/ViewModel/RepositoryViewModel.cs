@@ -24,9 +24,16 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             var tags = await _connection.Client.Tags.ListImageTagsAsync(Name, new ListImageTagsParameters(),
                 cancellationToken);
 
-            Tags = tags.Tags
-                .Select(t => new TagViewModel(_connection.Registry, tags.Name, t))
-                .ToArray();
+            if (tags == null)
+            {
+                Tags = new TagViewModel[]{};
+            }
+            else
+            {
+                Tags = tags.Tags
+                    .Select(t => new TagViewModel(_connection.Registry, tags.Name, t))
+                    .ToArray();
+            }
         }
 
         public string Name { get; }
