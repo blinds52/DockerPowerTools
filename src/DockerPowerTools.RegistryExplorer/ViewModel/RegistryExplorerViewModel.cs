@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -31,6 +32,8 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         public ICommand CopyCommand { get; }
         public ICommand PullCommand { get; }
 
+        public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
+
         private Task DeleteAsync()
         {
             var selectedCount = Repositories.Sum(r => r.Tags.Length);
@@ -52,15 +55,22 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
         public async Task LoadAsync()
         {
-            var repositories = await _connection.Client.Catalog.GetCatalogAsync(new CatalogParameters());
+            await AsyncExecutor.ExecuteAsync(LoadInnerAsync);
+        }
+
+        private async Task LoadInnerAsync(CancellationToken cancellationToken)
+        {
+            var repositories = await _connection.Client.Catalog.GetCatalogAsync(new CatalogParameters(), cancellationToken);
 
             var repositoryViewModels = new List<RepositoryViewModel>(repositories.Repositories.Length);
 
             foreach (var repository in repositories.Repositories)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 try
                 {
-                    var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters());
+                    var tags = await _connection.Client.Tags.ListImageTagsAsync(repository, new ListImageTagsParameters(), cancellationToken);
 
                     var tagViewModels = (tags.Tags ?? new string[0])
                         .Select(t => new TagViewModel(_connection.Registry, repository, t))

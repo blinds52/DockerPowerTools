@@ -69,8 +69,15 @@
     <Compile Include="AsyncExecutor.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="ConnectionTypeProbe.cs" />
+    <Compile Include="Controls\BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BusyIndicatorPanel.xaml.cs">
+      <DependentUpon>BusyIndicatorPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DockerConstants.cs" />
     <Compile Include="HttpClientOwner.cs" />
+    <Compile Include="PathFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,6 +104,15 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Controls\BusyIndicator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\BusyIndicatorPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

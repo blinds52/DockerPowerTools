@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:DockerPowerTools.RegistryExplorer.View"
              xmlns:viewModel="clr-namespace:DockerPowerTools.RegistryExplorer.ViewModel"
              xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
+             xmlns:controls1="clr-namespace:DockerPowerTools.Common.Controls;assembly=DockerPowerTools.Common"
+             xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel:RegistryExplorerViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -36,22 +38,28 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Path=Tag}"></TextBlock>
             </Grid>
         </DataTemplate>
+
+        <converters:CollapsedWhenFalseConverter x:Key="CollapsedWhenFalseConverter"/>
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <ToolBar>
-            <Button Command="{Binding Path=DeleteCommand}" ToolTip="Delete selected tags">
-                <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Delete.gif"   />
-            </Button>
-        </ToolBar>
+            <ToolBar>
+                <Button Command="{Binding Path=DeleteCommand}" ToolTip="Delete selected tags">
+                    <controls:AutoGreyableImage Source="/DockerPowerTools.RegistryExplorer;component/Images/Delete.gif"   />
+                </Button>
+            </ToolBar>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding Path=Repositories}">
+            <TreeView Grid.Row="1" ItemsSource="{Binding Path=Repositories}">
 
-        </TreeView>
+            </TreeView>
+        </Grid>
+
+        <controls1:BusyIndicatorPanel Visibility="{Binding Path=AsyncExecutor.IsBusy, Converter={StaticResource CollapsedWhenFalseConverter}}" />
     </Grid>
 </UserControl>

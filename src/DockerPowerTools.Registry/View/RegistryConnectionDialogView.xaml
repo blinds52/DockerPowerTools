@@ -39,6 +39,7 @@
                 <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
                 <Style TargetType="TextBox"   BasedOn="{StaticResource BaseStyle}"/>
                 <Style TargetType="CheckBox"  BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="ComboBox"  BasedOn="{StaticResource BaseStyle}"/>
                 <Style TargetType="controls:BindablePasswordBox" BasedOn="{StaticResource BaseStyle}"/>
 
                 <Style TargetType="TextBox" x:Key="ListTextBoxStyle" BasedOn="{StaticResource BaseStyle}">
@@ -60,10 +61,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0">Registry</TextBlock>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Registry, UpdateSourceTrigger=PropertyChanged}" x:Name="RegistryTextBox" />
+            <ComboBox IsEditable="True"  Grid.Row="0" Grid.Column="1" Text="{Binding Path=Registry, UpdateSourceTrigger=PropertyChanged}" x:Name="RegistryTextBox" ItemsSource="{Binding Path=Registries}" DisplayMemberPath="Registry" SelectedItem="{Binding Path=SelectedRegistry}" />
 
             <TextBlock Grid.Row="1" Grid.Column="0">Anonymous?</TextBlock>
             <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding Path=IsAnonymous}"/>
@@ -73,6 +75,10 @@
 
             <TextBlock Grid.Row="3" Grid.Column="0">Password</TextBlock>
             <controls:BindablePasswordBox Grid.Row="3" Grid.Column="1" Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsAnonymous, Converter={StaticResource InvertBooleanConverter}}"/>
+
+            
+            <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding Path=RememberPassword}">Remember password</CheckBox>
+
         </Grid>
 
 
@@ -85,7 +91,7 @@
             </Grid.ColumnDefinitions>
 
             <xctk:BusyIndicator Grid.Column="1" VerticalAlignment="Center" Margin="2" Visibility="{Binding Path=Executor.IsBusy, Converter={StaticResource HiddenWhenFalseConverter}}"/>
-            <Button Grid.Column="2" MinWidth="100" Margin="4" IsDefault="True" Command="{Binding Path=ConnectCommand}">_OK</Button>
+            <Button Grid.Column="2" MinWidth="100" Margin="4" IsDefault="True" Command="{Binding Path=ConnectCommand}">_Connect</Button>
             <Button Grid.Column="3" MinWidth="100" Margin="4" IsCancel="True">_Cancel</Button>
         </Grid>
     </Grid>

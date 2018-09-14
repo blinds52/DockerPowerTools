@@ -56,9 +56,9 @@ namespace DockerPowerTools.ViewModel
                 {
                     var registryExplorer = new RegistryExplorerViewModel(connection);
 
-                    await registryExplorer.LoadAsync();
-
                     Tools.Add(registryExplorer);
+
+                    await registryExplorer.LoadAsync();
                 }
             }
             catch (Exception ex)

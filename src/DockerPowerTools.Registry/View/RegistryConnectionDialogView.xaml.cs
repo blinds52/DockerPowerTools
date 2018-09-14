@@ -15,8 +15,6 @@ namespace DockerPowerTools.Registry.View
 
         private void RegistryConnectionDialogView_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            
-            RegistryTextBox.SelectAll();
         }
     }
 }

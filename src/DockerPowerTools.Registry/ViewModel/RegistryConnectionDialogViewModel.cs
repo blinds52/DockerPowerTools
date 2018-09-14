@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -7,22 +8,36 @@ using Docker.Registry.DotNet;
 using Docker.Registry.DotNet.Authentication;
 using DockerPowerTools.Common;
 using DockerPowerTools.Common.ViewModel;
+using DockerPowerTools.Registry.Model;
 using GalaSoft.MvvmLight.CommandWpf;
 
 namespace DockerPowerTools.Registry.ViewModel
 {
     public class RegistryConnectionDialogViewModel : CloseableViewModel
     {
-        private const string DefaultEndpoint = "registry.hub.docker.com";
-
         private bool _isAnonymous = true;
 
-        private string _registry = DefaultEndpoint;
+        private string _registry;
         private string _username;
         private string _password;
 
+        private readonly RegistryConnectionsModel _connections;
+        private RegistryConnectionModel _selectedRegistry;
+        private bool _rememberPassword;
+
         public RegistryConnectionDialogViewModel()
         {
+            //Load up the saved connections
+            _connections = RegistryConnectionsFactory.Load();
+
+            SelectedRegistry =
+                _connections.Connections.FirstOrDefault(r => r.Registry == _connections.SelectedRegistry);
+
+            if (SelectedRegistry == null)
+            {
+                SelectedRegistry = _connections.Connections.FirstOrDefault();
+            }
+
             ConnectCommand = new RelayCommand(() => ConnectAsync().IgnoreAsync(), CanConnect);
         }
 
@@ -76,12 +91,64 @@ namespace DockerPowerTools.Registry.ViewModel
 
                 Connection = connection;
 
+                //Save the connections!
+                Save();
+
                 RequestClose(true);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Unable to connect");
             }
+        }
+
+        private void Save()
+        {
+            var connections = _connections.Connections.ToList();
+
+            if (SelectedRegistry == null)
+            {
+                //Need to add one!
+                var connection = new RegistryConnectionModel
+                {
+                    Registry = Registry,
+                    IsAnonymous = IsAnonymous,
+                    Username = Username
+                };
+
+                if (RememberPassword)
+                {
+                    connection.Password = Password;
+                }
+
+                connections.Add(connection);
+            }
+            else
+            {
+                //SelectedRegistry.Registry = Registry;
+                SelectedRegistry.Username = Username;
+
+                if (RememberPassword)
+                {
+                    SelectedRegistry.Password = Password;
+                }
+            }
+
+            var toSave = new RegistryConnectionsModel()
+            {
+                Connections = connections.ToArray()
+            };
+
+            if (SelectedRegistry == null)
+            {
+                toSave.SelectedRegistry = Registry;
+            }
+            else
+            {
+                toSave.SelectedRegistry = SelectedRegistry.Registry;
+            }
+
+            RegistryConnectionsFactory.Save(toSave);
         }
 
         private bool CanConnect()
@@ -99,6 +166,52 @@ namespace DockerPowerTools.Registry.ViewModel
             }
 
             return true;
+        }
+
+        public bool RememberPassword
+        {
+            get => _rememberPassword;
+            set
+            {
+                _rememberPassword = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public IEnumerable<RegistryConnectionModel> Registries => _connections.Connections;
+
+        public RegistryConnectionModel SelectedRegistry
+        {
+            get => _selectedRegistry;
+            set
+            {
+                _selectedRegistry = value;
+
+                if (value == null)
+                {
+                    Username = "";
+                    Password = null;
+                }
+                else
+                {
+                    IsAnonymous = value.IsAnonymous;
+
+                    if (value.IsAnonymous)
+                    {
+                        Username = "";
+                        Password = "";
+                        RememberPassword = false;
+                    }
+                    else
+                    {
+                        Username = value.Username;
+                        Password = value.Password;
+                        RememberPassword = !string.IsNullOrWhiteSpace(value.Password);
+                    }
+                }
+
+                RaisePropertyChanged();
+            }
         }
 
         public RegistryConnection Connection { get; private set; }

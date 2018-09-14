@@ -112,6 +112,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\RegistryConnectionModel.cs" />
+    <Compile Include="Model\RegistryConnectionsFactory.cs" />
+    <Compile Include="Model\RegistryConnectionsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -154,9 +157,7 @@
       <Name>DockerPowerTools.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\SQLMobileConnection_16x.png" />
   </ItemGroup>
