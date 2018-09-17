@@ -98,22 +98,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModel\RegistryCopyViewModel.cs" />
-    <Compile Include="ViewModel\RegistryViewModel.cs" />
-    <Compile Include="ViewModel\RepositoryViewModel.cs" />
     <Compile Include="ViewModel\TagViewModel.cs" />
     <Compile Include="View\RegistryCopyView.xaml.cs">
       <DependentUpon>RegistryCopyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\RegistryView.xaml.cs">
-      <DependentUpon>RegistryView.xaml</DependentUpon>
-    </Compile>
     <Page Include="View\RegistryCopyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\RegistryView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +137,17 @@
       <Project>{3a7b4c4a-677f-4a10-97c4-75c30710ba5f}</Project>
       <Name>DockerPowerTools.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DockerPowerTools.Docker\DockerPowerTools.Docker.csproj">
+      <Project>{85ce6873-fcc8-46c2-b272-159b5c4e0e65}</Project>
+      <Name>DockerPowerTools.Docker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DockerPowerTools.Registry\DockerPowerTools.Registry.csproj">
+      <Project>{9608a6ee-6d75-4d32-a236-0271d9beea25}</Project>
+      <Name>DockerPowerTools.Registry</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TransferJob_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

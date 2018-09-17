@@ -3,70 +3,97 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Docker.DotNet;
 using DockerPowerTools.Common;
+using DockerPowerTools.Docker;
+using DockerPowerTools.Registry;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
 
 namespace DockerPowerTools.RegistryCopy.ViewModel
 {
     public class RegistryCopyViewModel : ViewModelBase
     {
-        private string _dockerEndpoint;
+        private readonly DockerConnectionService _dockerConnectionService = new DockerConnectionService();
+        private readonly RegistryConnectionService _registryConnectionService = new RegistryConnectionService();
+        private DockerConnection _dockerConnection;
+        private RegistryConnection _targetRegistryConnection;
 
-        public RegistryCopyViewModel()
+        public RegistryCopyViewModel(RegistryConnection sourceRegistryConnection)
         {
-            DockerEndpoint = DockerConstants.DefaultWindowsDockerEndpoint;
-
-            TestConnectionCommand = new RelayCommand(() => TestConnectionAsync().IgnoreAsync(), CanTestConnection);
+            Tags = new TagViewModel[]{};
         }
 
-        public ICommand TestConnectionCommand { get; }
+        public ICommand ChooseDockerConnectionCommand { get; }
+        public ICommand ChooseTargetRegistryConnectionCommand { get; }
+        public ICommand CopyCommand { get; }
 
-        public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
+        private void ChooseDockerConnection()
+        {
 
-        private async Task TestConnectionAsync()
+        }
+
+        private void ChooseTargetRegistryConnection()
+        {
+
+        }
+
+        private void Copy()
+        {
+            AsyncExecutor.ExecuteAsync(CopyInternalAsync).IgnoreAsync();
+        }
+
+        public Task LoadAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task CopyInternalAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await AsyncExecutor.ExecuteAsync(CreateDockerClientAsync);
+                foreach (var tag in Tags)
+                {
+
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}", "Connection Failed");
-            }   
+                MessageBox.Show(ex.Message);
+            }
         }
 
-        private bool CanTestConnection()
+        private bool CanCopy()
         {
-            if (!AsyncExecutor.CanExecute)
+            if (DockerConnection == null)
                 return false;
 
-            if (string.IsNullOrWhiteSpace(DockerEndpoint))
+            if (TargetRegistryConnection == null)
                 return false;
 
             return true;
         }
 
-        public async Task<IDockerClient> CreateDockerClientAsync(CancellationToken cancellationToken)
+        public DockerConnection DockerConnection
         {
-            var dockerClientConfiguration = new DockerClientConfiguration(new Uri(DockerEndpoint));
-
-            var dockerClient = dockerClientConfiguration.CreateClient();
-
-            await dockerClient.System.PingAsync(cancellationToken);
-
-            return dockerClient;
-        }
-
-        public string DockerEndpoint
-        {
-            get => _dockerEndpoint;
-            set
+            get => _dockerConnection;
+            private set
             {
-                _dockerEndpoint = value; 
+                _dockerConnection = value; 
                 RaisePropertyChanged();
             }
         }
+
+        public RegistryConnection TargetRegistryConnection
+        {
+            get => _targetRegistryConnection;
+            set
+            {
+                _targetRegistryConnection = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public TagViewModel[] Tags { get; }
+
+        public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();        
     }
 }

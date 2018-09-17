@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,8 @@ using Docker.Registry.DotNet.Models;
 using DockerPowerTools.Common;
 using DockerPowerTools.Common.ViewModel;
 using DockerPowerTools.Registry;
+using DockerPowerTools.RegistryCopy.View;
+using DockerPowerTools.RegistryCopy.ViewModel;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Threading;
 
@@ -32,6 +35,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             DeleteCommand = new RelayCommand(Delete, CanDelete);
             RefreshCommand = new RelayCommand(Refresh, CanRefresh);
             LoadRepositoryCommand = new RelayCommand(LoadRepository, CanLoadRepository);
+            CopyCommand = new RelayCommand(Copy, CanCopy);
         }
 
         public ICommand DeleteCommand { get; }
@@ -44,6 +48,28 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         private void LoadRepository()
         {
             AsyncExecutor.ExecuteAsync(LoadRepositoryAsync).IgnoreAsync();
+        }
+
+        private void Copy()
+        {
+            var copyViewModel = new RegistryCopyViewModel(_connection);
+
+            var copyView = new RegistryCopyView
+            {
+                DataContext = copyViewModel
+            };
+
+            copyViewModel.LoadAsync().IgnoreAsync();
+
+            copyView.Show();           
+        }
+
+        private bool CanCopy()
+        {
+            if (AsyncExecutor.IsBusy)
+                return false;
+
+            return true;
         }
 
         private void Refresh()

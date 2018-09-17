@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DockerPowerTools.RegistryCopy.View.RegistryCopyView"
+﻿<Window x:Class="DockerPowerTools.RegistryCopy.View.RegistryCopyView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,28 +7,61 @@
              xmlns:viewModel="clr-namespace:DockerPowerTools.RegistryCopy.ViewModel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel:RegistryCopyViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+        Title="Copy Images"
+        Height="450" Width="800">
 
-    <UserControl.Resources>
+    <Window.Resources>
         <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
-    </UserControl.Resources>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
 
-        <!-- Docker daeomon area -->
+        <!-- Docker connection -->
+        <GroupBox Header="Docker Service">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox VerticalAlignment="Center" Margin="4" Text="{Binding Path=DockerConnection.Endpoint, Mode=OneWay}" IsReadOnly="True"></TextBox>
+                <Button Grid.Column="1" Margin="4" MinWidth="100" Command="{Binding Path=ChooseDockerConnectionCommand}">Connect</Button>
+            </Grid>
+        </GroupBox>
 
 
         <!-- Registries -->
+        <GroupBox Grid.Row="1" Header="Target Registry">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
+                <TextBox VerticalAlignment="Center" Margin="4" Text="{Binding Path=TargetRegistryConnection.Registry, Mode=OneWay}" IsReadOnly="True"></TextBox>
+                <Button Grid.Column="1" Margin="4" MinWidth="100" Command="{Binding Path=ChooseTargetRegistryConnectionCommand}">Connect</Button>
+            </Grid>
+        </GroupBox>
+
+        <!-- Tags -->
+        <GroupBox Grid.Row="2" Header="Tags">
+            <DataGrid Margin="4" ItemsSource="{Binding Path=Tags}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Source Tag" Width="300"/>
+                    <DataGridTextColumn Header="Target Tag" Width="300"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
 
         <!-- StatusBar -->
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="3">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -53,4 +86,4 @@
             
         </StatusBar>
     </Grid>
-</UserControl>
+</Window>

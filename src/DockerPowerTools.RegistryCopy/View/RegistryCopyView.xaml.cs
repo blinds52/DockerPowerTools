@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace DockerPowerTools.RegistryCopy.View
+﻿namespace DockerPowerTools.RegistryCopy.View
 {
     /// <summary>
     /// Interaction logic for RegistryCopyView.xaml
     /// </summary>
-    public partial class RegistryCopyView : UserControl
+    public partial class RegistryCopyView
     {
         public RegistryCopyView()
         {

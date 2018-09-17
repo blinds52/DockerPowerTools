@@ -86,7 +86,7 @@ namespace DockerPowerTools.Docker.ViewModel
 
                 await client.System.PingAsync();
 
-                Connection = new DockerConnection(client);
+                Connection = new DockerConnection(client, endpoint);
 
                 Save();
 
