@@ -175,6 +175,10 @@
       <Project>{f909aa45-c150-40aa-9eef-d3b6a1c345c7}</Project>
       <Name>DockerPowerTools.DockerExplorer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DockerPowerTools.Docker\DockerPowerTools.Docker.csproj">
+      <Project>{85ce6873-fcc8-46c2-b272-159b5c4e0e65}</Project>
+      <Name>DockerPowerTools.Docker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DockerPowerTools.RegistryCopy\DockerPowerTools.RegistryCopy.csproj">
       <Project>{13539b77-a62d-4362-b38d-08e3bade89b2}</Project>
       <Name>DockerPowerTools.RegistryCopy</Name>

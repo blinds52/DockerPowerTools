@@ -37,7 +37,6 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         public ICommand DeleteCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand CopyCommand { get; }
-        public ICommand PullCommand { get; }
         public ICommand LoadRepositoryCommand { get; }
 
         public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
@@ -198,7 +197,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Unable to load catalog.");
+                Trace.WriteLine($"Unable to load catalog: {ex.Message}");
             }
         }
 

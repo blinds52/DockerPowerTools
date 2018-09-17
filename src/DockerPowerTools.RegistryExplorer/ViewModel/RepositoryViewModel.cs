@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Docker.Registry.DotNet.Models;
@@ -30,9 +31,20 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             }
             else
             {
-                Tags = tags.Tags
-                    .Select(t => new TagViewModel(_connection.Registry, tags.Name, t))
-                    .ToArray();
+                var tagViewModels = new List<TagViewModel>();
+
+                if (tags?.Tags != null)
+                {
+                    foreach (var tag in tags.Tags)
+                    {
+                        if (tag != null)
+                        {
+                             tagViewModels.Add(new TagViewModel(_connection.Registry, tags.Name, tag));
+                        }
+                    }
+                }
+
+                Tags = tagViewModels.ToArray();
             }
         }
 

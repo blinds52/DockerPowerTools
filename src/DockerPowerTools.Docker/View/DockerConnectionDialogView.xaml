@@ -1,0 +1,89 @@
+﻿<Window x:Class="DockerPowerTools.Docker.View.DockerConnectionDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DockerPowerTools.Docker.View"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:Cas.Common.WPF.Behaviors;assembly=Cas.Common.WPF"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
+        xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
+        xmlns:controls1="clr-namespace:DockerPowerTools.Common.Controls;assembly=DockerPowerTools.Common"
+        ResizeMode="NoResize"
+        mc:Ignorable="d"
+        SizeToContent="Height"
+        Title="Connect to Docker Service" Width="500">
+    <i:Interaction.Behaviors>
+        <behaviors:CloseableBehavior/>
+    </i:Interaction.Behaviors>
+
+    <Window.Resources>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.Resources>
+                <Style x:Key="BaseStyle" TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="TextBox"   BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="CheckBox"  BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="ComboBox"  BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="controls:BindablePasswordBox" BasedOn="{StaticResource BaseStyle}"/>
+
+                <Style TargetType="TextBox" x:Key="ListTextBoxStyle" BasedOn="{StaticResource BaseStyle}">
+                    <Setter Property="AcceptsReturn" Value="True"/>
+                    <Setter Property="AcceptsTab" Value="True"/>
+                    <Setter Property="TextWrapping" Value="NoWrap"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                </Style>
+            </Grid.Resources>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0">Endpoint</TextBlock>
+            <ComboBox IsEditable="True"  Grid.Row="0" Grid.Column="1" Text="{Binding Path=Endpoint, UpdateSourceTrigger=PropertyChanged}" x:Name="RegistryTextBox" ItemsSource="{Binding Path=Connections}" DisplayMemberPath="Endpoint" SelectedItem="{Binding Path=SelectedConnection}" />
+
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--<controls1:BusyIndicator Grid.Column="1" VerticalAlignment="Center" Margin="2" Visibility="{Binding Path=Executor.IsBusy, Converter={StaticResource HiddenWhenFalseConverter}}">
+                <controls1:BusyIndicator.LayoutTransform>
+                    <ScaleTransform ScaleX="0.4" ScaleY="0.4"></ScaleTransform>
+                </controls1:BusyIndicator.LayoutTransform>
+            </controls1:BusyIndicator>-->
+            <Button Grid.Column="2" MinWidth="100" Margin="4" IsDefault="True" Command="{Binding Path=ConnectCommand}">_Connect</Button>
+            <Button Grid.Column="3" MinWidth="100" Margin="4" IsCancel="True">_Cancel</Button>
+        </Grid>
+    </Grid>
+</Window>

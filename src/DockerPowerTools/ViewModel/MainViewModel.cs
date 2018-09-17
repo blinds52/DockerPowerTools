@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using DockerPowerTools.Common;
 using DockerPowerTools.Common.ViewModel;
+using DockerPowerTools.Docker;
 using DockerPowerTools.DockerExplorer.ViewModel;
 using DockerPowerTools.Registry;
 using DockerPowerTools.RegistryExplorer.ViewModel;
@@ -15,6 +16,7 @@ namespace DockerPowerTools.ViewModel
     public class MainViewModel
     {
         private readonly RegistryConnectionService _registryConnectionService = new RegistryConnectionService();
+        private readonly DockerConnectionService _dockerConnectionService = new DockerConnectionService();
 
         public MainViewModel()
         {
@@ -25,20 +27,25 @@ namespace DockerPowerTools.ViewModel
         public ICommand OpenDockerExplorerCommand { get; }
         public ICommand OpenRegistryExplorerCommand { get; }
 
-        private Task OpenDockerExplorerAsync()
+        private async Task OpenDockerExplorerAsync()
         {
             try
             {
-                var dockerExplorer = new DockerExplorerViewModel();
+                var connection = await _dockerConnectionService.GetDockerConnectionAsync();
 
-                Tools.Add(dockerExplorer);            
+                if (connection != null)
+                {
+                    var dockerExplorer = new DockerExplorerViewModel(connection);
+
+                    Tools.Add(dockerExplorer);
+
+                    await dockerExplorer.LoadAsync();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            return Task.CompletedTask;
         }
 
         private bool CanOpenDockerExplorer()
