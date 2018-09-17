@@ -35,14 +35,14 @@
                 <MenuItem Header="E_xit" x:Name="ExitMenu" Click="ExitMenu_OnClick"/>
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Header="Docker Explorer" Command="{Binding Path=OpenDockerExplorerCommand}"></MenuItem>
+                <!--<MenuItem Header="Docker Explorer" Command="{Binding Path=OpenDockerExplorerCommand}"></MenuItem>-->
                 <MenuItem Header="Registry Explorer" Command="{Binding Path=OpenRegistryExplorerCommand}"></MenuItem>
             </MenuItem>
         </Menu>
 
         <ToolBar Grid.Row="1">
-            <Button Command="{Binding Path=OpenDockerExplorerCommand}">Docker Explorer</Button>
-            <Separator/>
+            <!--<Button Command="{Binding Path=OpenDockerExplorerCommand}">Docker Explorer</Button>
+            <Separator/>-->
             <Button Command="{Binding Path=OpenRegistryExplorerCommand}">Registry Explorer</Button>
         </ToolBar>
 

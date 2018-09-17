@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -6,34 +7,61 @@ using System.Windows.Input;
 using DockerPowerTools.Common;
 using DockerPowerTools.Docker;
 using DockerPowerTools.Registry;
+using DockerPowerTools.RegistryCopy.Model;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace DockerPowerTools.RegistryCopy.ViewModel
 {
     public class RegistryCopyViewModel : ViewModelBase
     {
+        private readonly RegistryConnection _sourceRegistryConnection;
         private readonly DockerConnectionService _dockerConnectionService = new DockerConnectionService();
         private readonly RegistryConnectionService _registryConnectionService = new RegistryConnectionService();
         private DockerConnection _dockerConnection;
         private RegistryConnection _targetRegistryConnection;
 
-        public RegistryCopyViewModel(RegistryConnection sourceRegistryConnection)
+        public RegistryCopyViewModel(RegistryConnection sourceRegistryConnection, TagModel[] tags)
         {
+            _sourceRegistryConnection = sourceRegistryConnection;
             Tags = new TagViewModel[]{};
+
+            CopyCommand = new RelayCommand(Copy, CanCopy);
+
+            ChooseDockerConnectionCommand = new RelayCommand(() => ChooseDockerConnectionAsync().IgnoreAsync());
+            ChooseTargetRegistryConnectionCommand = new RelayCommand(() => ChooseTargetRegistryConnectionAsync().IgnoreAsync());
+
+            Tags = tags
+                .Select(t => new TagViewModel(t))
+                .ToArray();
         }
 
         public ICommand ChooseDockerConnectionCommand { get; }
         public ICommand ChooseTargetRegistryConnectionCommand { get; }
         public ICommand CopyCommand { get; }
 
-        private void ChooseDockerConnection()
+        private async Task ChooseDockerConnectionAsync()
         {
+            var connection = await _dockerConnectionService.GetDockerConnectionAsync();
 
+            if (connection != null)
+            {
+                DockerConnection = connection;
+
+                CommandManager.InvalidateRequerySuggested();
+            }
         }
 
-        private void ChooseTargetRegistryConnection()
+        private async Task ChooseTargetRegistryConnectionAsync()
         {
+            var connection = await _registryConnectionService.GetRegistryConnectionAsync();
 
+            if (connection != null)
+            {
+                TargetRegistryConnection = connection;
+
+                CommandManager.InvalidateRequerySuggested();
+            }
         }
 
         private void Copy()
@@ -52,7 +80,7 @@ namespace DockerPowerTools.RegistryCopy.ViewModel
             {
                 foreach (var tag in Tags)
                 {
-
+                    await tag.CopyAsync(_sourceRegistryConnection, _dockerConnection, _targetRegistryConnection, cancellationToken);
                 }
             }
             catch (Exception ex)

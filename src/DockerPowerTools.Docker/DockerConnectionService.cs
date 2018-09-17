@@ -7,7 +7,7 @@ namespace DockerPowerTools.Docker
 {
     public class DockerConnectionService
     {
-        public async Task<DockerConnection> GetDockerConnectionAsync()
+        public Task<DockerConnection> GetDockerConnectionAsync()
         {
             var viewModel = new DockerConnectionDialogViewModel();
 
@@ -18,10 +18,10 @@ namespace DockerPowerTools.Docker
 
             if (view.ShowDialog() == true)
             {
-                return viewModel.Connection;
+                return Task.FromResult(viewModel.Connection);
             }
 
-            return null;
+            return Task.FromResult<DockerConnection>(null);
         }
     }
 }

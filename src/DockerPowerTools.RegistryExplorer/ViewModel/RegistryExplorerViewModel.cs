@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +11,7 @@ using Docker.Registry.DotNet.Models;
 using DockerPowerTools.Common;
 using DockerPowerTools.Common.ViewModel;
 using DockerPowerTools.Registry;
+using DockerPowerTools.RegistryCopy.Model;
 using DockerPowerTools.RegistryCopy.View;
 using DockerPowerTools.RegistryCopy.ViewModel;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -52,7 +52,19 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
         private void Copy()
         {
-            var copyViewModel = new RegistryCopyViewModel(_connection);
+            //Get the selected tags
+            var selectedTags = Repositories
+                .SelectMany(r => r.Tags.Where(t => t.IsSelected));
+
+            var tagModels = selectedTags
+                .Select(t => new TagModel
+                {
+                    Registry = t.Registry,
+                    Repository = t.Repository,
+                    Tag = t.Tag
+                }).ToArray();
+
+            var copyViewModel = new RegistryCopyViewModel(_connection, tagModels);
 
             var copyView = new RegistryCopyView
             {
@@ -67,6 +79,9 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         private bool CanCopy()
         {
             if (AsyncExecutor.IsBusy)
+                return false;
+
+            if (!AreAnyTagsSelected())
                 return false;
 
             return true;
@@ -178,9 +193,14 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
             }
         }
 
-        private bool CanDelete()
+        private bool AreAnyTagsSelected()
         {
             return Repositories.Any(r => r.Tags.Any(t => t.IsSelected));
+        }
+
+        private bool CanDelete()
+        {
+            return AreAnyTagsSelected();
         }
 
         public Task LoadAsync()

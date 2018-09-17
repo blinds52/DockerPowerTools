@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel:RegistryCopyViewModel}"
         Title="Copy Images"
-        Height="450" Width="800">
+        Height="450" Width="800" Icon="/DockerPowerTools.RegistryCopy;component/Images/TransferJob_16x.png">
 
     <Window.Resources>
         <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
@@ -20,11 +20,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
 
         <!-- Docker connection -->
-        <GroupBox Header="Docker Service">
+        <GroupBox Header="Docker Service" ToolTip="A docker service is used to pull / push the images between registries.">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -52,16 +53,26 @@
 
         <!-- Tags -->
         <GroupBox Grid.Row="2" Header="Tags">
-            <DataGrid Margin="4" ItemsSource="{Binding Path=Tags}">
+            <DataGrid Margin="4" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Source Tag" Width="300"/>
-                    <DataGridTextColumn Header="Target Tag" Width="300"/>
+                    <DataGridTextColumn Header="Source" Binding="{Binding Path=Source, Mode=OneWay}" Width="300" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Target Repository" Binding="{Binding Path=TargetRepository}"  Width="200"/>
+                    <DataGridTextColumn Header="Target Repository" Binding="{Binding Path=TargetTag}"  Width="200"/>
+                    <DataGridTextColumn Header="Status" Width="300" Binding="{Binding Path=Status}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
 
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Margin="4" MinWidth="100" Command="{Binding Path=CopyCommand}">Copy</Button>
+        </Grid>
+
         <!-- StatusBar -->
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="4">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>

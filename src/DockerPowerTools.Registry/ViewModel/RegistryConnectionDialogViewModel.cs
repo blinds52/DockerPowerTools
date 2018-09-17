@@ -87,7 +87,7 @@ namespace DockerPowerTools.Registry.ViewModel
 
                 await client.System.PingAsync();
 
-                var connection = new RegistryConnection(client, Registry);
+                var connection = new RegistryConnection(client, Registry, IsAnonymous, Username, Password);
 
                 Connection = connection;
 
