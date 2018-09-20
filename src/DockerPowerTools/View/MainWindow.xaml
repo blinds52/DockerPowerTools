@@ -54,6 +54,12 @@
                 </DataTemplate>
             </xcad:DockingManager.DocumentHeaderTemplate>
 
+            <xcad:DockingManager.DocumentTitleTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Content.Title}"/>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentTitleTemplate>
+
             <xcad:DockingManager.Resources>
                
             </xcad:DockingManager.Resources>
