@@ -35,7 +35,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
                 if (tags?.Tags != null)
                 {
-                    foreach (var tag in tags.Tags)
+                    foreach (var tag in tags.Tags.OrderByDescending(t => t))
                     {
                         if (tag != null)
                         {
