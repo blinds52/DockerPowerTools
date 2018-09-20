@@ -23,8 +23,6 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
     {
         private readonly RegistryConnection _connection;
         private ObservableCollection<RepositoryViewModel> _repositories = new ObservableCollection<RepositoryViewModel>();
-        public override string Title => "Registry Explorer";
-
         private bool _canLoadCatalog;
         private string _repository;
 
@@ -42,6 +40,8 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
         public ICommand RefreshCommand { get; }
         public ICommand CopyCommand { get; }
         public ICommand LoadRepositoryCommand { get; }
+
+        public override string Title => $"Registry - {_connection.Registry}";
 
         public AsyncExecutor AsyncExecutor { get; } = new AsyncExecutor();
 
