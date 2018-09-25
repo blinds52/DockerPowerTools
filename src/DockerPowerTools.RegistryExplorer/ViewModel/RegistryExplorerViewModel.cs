@@ -195,7 +195,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
         private bool AreAnyTagsSelected()
         {
-            return Repositories.Any(r => r.Tags.Any(t => t.IsSelected));
+            return Repositories.Any(r => r.Tags != null && r.Tags.Any(t => t.IsSelected));
         }
 
         private bool CanDelete()
@@ -220,7 +220,7 @@ namespace DockerPowerTools.RegistryExplorer.ViewModel
 
                 var repositoryViewModels = new List<RepositoryViewModel>(repositories.Repositories.Length);
 
-                foreach (var repository in repositories.Repositories)
+                foreach (var repository in repositories.Repositories.OrderBy(r => r))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
