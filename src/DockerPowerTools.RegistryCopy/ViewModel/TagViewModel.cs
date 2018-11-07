@@ -121,8 +121,6 @@ namespace DockerPowerTools.RegistryCopy.ViewModel
                 Status = ex.Message;
             }
         }
-
-        
     }
 
     public class Progress : IProgress<JSONMessage>

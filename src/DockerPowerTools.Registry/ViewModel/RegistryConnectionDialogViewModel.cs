@@ -47,30 +47,7 @@ namespace DockerPowerTools.Registry.ViewModel
         {
             try
             {
-                string partialUrl = $"{Registry}/v2";
-
-                var connectionType = await ConnectionTypeProbe.ProbeAsync(partialUrl);
-
-                string uri;
-
-                switch (connectionType)
-                {
-                    case ConnectionType.Https:
-                        uri = $"https://{Registry}";
-                        break;
-
-                    case ConnectionType.Http:
-                        uri = $"http://{Registry}";
-                        break;
-
-                    case ConnectionType.None:
-                        throw new Exception($"No connection could be established with '{Registry}'");
-
-                    default:
-                        throw new Exception($"Unexpected value '{connectionType}'");
-                }
-
-                var configuration = new RegistryClientConfiguration(new Uri(uri));
+                var configuration = new RegistryClientConfiguration(Registry);
 
                 AuthenticationProvider authenticationProvider;
 
