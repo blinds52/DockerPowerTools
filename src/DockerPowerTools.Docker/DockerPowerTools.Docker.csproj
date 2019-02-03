@@ -119,9 +119,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DockerPowerTools.Common\DockerPowerTools.Common.csproj">
       <Project>{3a7b4c4a-677f-4a10-97c4-75c30710ba5f}</Project>
